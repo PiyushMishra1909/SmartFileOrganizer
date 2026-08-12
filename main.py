@@ -10,7 +10,8 @@ file_types = {
 }
 
 # LISTS THE FILE IN THE GIVEN DIRECTORY
-files = os.listdir("C:/Users/piyus/OneDrive/Desktop/Smart_Organizer")
+source_folder = input("Enter the folder path you want to organize : ").strip()
+files = os.listdir(source_folder)
 print(files)
 
 # NAMES ALL THE FILES WITH THIER EXTENSION IN THE GIVEN DIRECTORY
@@ -30,8 +31,8 @@ for file in files:
     category = file_types.get(extension, "Others")
     print(file, "belongs to", category)
 
-    Destination_folder = os.path.join(
-    "C:/Users/piyus/OneDrive/Desktop/Smart_Organizer_Destination", category)
+    # 
+    Destination_folder = input("Enter the destination folder path : ").strip()
     os.makedirs(Destination_folder, exist_ok=True)
 
     shutil.move(full_path , os.path.join(Destination_folder , file))
