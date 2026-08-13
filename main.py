@@ -9,31 +9,52 @@ file_types = {
             ".txt": "Documents", ".pdf": "Documents"
 }
 
-# LISTS THE FILE IN THE GIVEN DIRECTORY
-source_folder = input("Enter the folder path you want to organize : ").strip()
-files = os.listdir(source_folder)
-print(files)
+while True:
+    source_folder = input(
+        "Enter the folder path you want to organize : ").strip()
 
-# NAMES ALL THE FILES WITH THIER EXTENSION IN THE GIVEN DIRECTORY
+    if os.path.isdir(source_folder):
+        break ;
+    else :
+        print("Wrong path! Please enter correct path : ")
+
+
+destination_folder = input("Enter the destination folder path : ").strip()
+files = os.listdir(source_folder)
+
 for file in files:
     name, extension = os.path.splitext(file)
 
-    # IGNORES THE FOLDER ONLY FOCUS ON FILES
-    full_path = os.path.join(
-        "C:/Users/piyus/OneDrive/Desktop/Smart_Organizer", file)
+    full_path = os.path.join(source_folder, file)
 
-    # IF FULL PATH FOUND THEN CONTINUES
     if os.path.isdir(full_path):
         continue
-    print(file, "-->", extension)
 
-    # IF THE FILE TYPES EXSISTS IT WILL TELL THE FILE TYPES OR IF IT DOES NOT THE IT WILL SIMPLY SAY IT BELONGS TO OTHERS
     category = file_types.get(extension, "Others")
-    print(file, "belongs to", category)
 
-    # 
-    Destination_folder = input("Enter the destination folder path : ").strip()
-    os.makedirs(Destination_folder, exist_ok=True)
+    dest_folder = os.path.join(destination_folder, category)
 
-    shutil.move(full_path , os.path.join(Destination_folder , file))
-    print(f"Moved {file} --> {category}/")
+    os.makedirs(dest_folder, exist_ok=True)
+
+    dest_path = os.path.join(dest_folder , file)
+
+    if os.path.isfile(dest_path):
+        choice = input(f"{file} already exists.\n(r) Rename\n(o) Overwrite\n(s) Skip\nYour choice: ").strip().lower()
+
+        move_file = True ; 
+        
+        if choice == "r" :
+            new_name = input("Enter new name(with extension) : ").strip()
+            dest_path = os.path.join(dest_folder , new_name)
+
+        elif choice == "s" :
+            move_file = False ;
+            print(f"Skipped {file}") 
+        
+        if move_file :
+            shutil.move(full_path , dest_path)
+            print(f"Moved {file} --> {category}/")
+
+    else : 
+        shutil.move(full_path , dest_path)
+        print(f"Moved {file} --> {category}/")
